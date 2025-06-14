@@ -5,17 +5,22 @@
     <title>Geometry Dash Subzero</title>
     <script src="Build/UnityLoader.js"></script>
     <script>
+      // Prevent leaving or refreshing the page without confirmation
       window.addEventListener('beforeunload', function (e) {
         const confirmationMessage = "Are you sure you want to leave? Your progress may be lost.";
         (e || window.event).returnValue = confirmationMessage;
         return confirmationMessage;
       });
 
+      // Block all external link navigation
       document.addEventListener('click', function (e) {
-        if (e.target.tagName === 'A' && e.target.href) {
-          const confirmed = confirm('Are you sure you want to leave this page? Your progress may be lost.');
-          if (!confirmed) {
+        const target = e.target.closest('a');
+        if (target && target.href) {
+          const url = new URL(target.href);
+          // If the link is not from the current origin, block it
+          if (url.origin !== window.location.origin) {
             e.preventDefault();
+            alert("Navigation to other websites is disabled.");
           }
         }
       });
